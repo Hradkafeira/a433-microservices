@@ -1,0 +1,31 @@
+# docker compose version.
+version: "3.9"
+
+# membuat 2 services:  Item-app dan app-db
+services:
+  item-app:
+    # menggunakan image dari github packages
+    image: ghcr.io/hradkafeira/item-app:v1
+    # menunggu item-db diluncurkan
+    depends_on:
+      - item-db
+    # Expose port 80 di localhost dan 8080 pada docker container
+    ports:
+      - 80:8080
+    # konfigurasi working direktori di /app
+    working_dir: /app
+    # menerapkan restart policy ketika ada error 
+    restart: on-failure
+
+  item-db:
+    # menggunakan image mongo:3 dari docker hub
+    image: mongo:3
+    # konfigurasi target volume agar menyimpan data ke /data/db di container
+    volumes:
+      - app-db:/data/db
+    # menerapkan restart policy ketika ada error 
+    restart: on-failure
+
+# membuat volume dengan nama app-db
+volumes:
+  app-db:
