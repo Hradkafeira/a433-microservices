@@ -1,0 +1,34 @@
+version: 2.1
+
+jobs:
+  lint-dockerfile:
+    docker:
+      - image: hadolint/hadolint
+    steps:
+      - checkout
+      - run:
+          name: Run Dockerfile with hadolint
+          command: |
+            hadolint Dockerfile
+
+  test-app:
+    docker:
+      - image: circleci/golang:1.15
+    steps:
+      - checkout
+      - run:
+          name: Run unit test
+          command: go test -v -short --count=1 $(go list ./...)
+    requires:
+      - lint-dockerfile
+
+  build-app-karsajobs:
+    docker:
+      - image: circleci/base:latest
+    steps:
+      - checkout
+      - run:
+          name: Build and push app image
+          command: ./build_push_image_karsajobs.sh
+    requires:
+      - test-app
