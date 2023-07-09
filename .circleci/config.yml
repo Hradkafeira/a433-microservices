@@ -11,7 +11,7 @@ jobs:
           name: Run Dockerfile with hadolint
           command: |
             docker pull hadolint/hadolint
-            echo Dockerfile | docker run --rm -i hadolint/hadolint
+            cat Dockerfile | docker run --rm -i hadolint/hadolint
 
   test-app:
     docker:
