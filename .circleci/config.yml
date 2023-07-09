@@ -19,8 +19,6 @@ jobs:
       - run:
           name: Run unit test
           command: go test -v -short --count=1 $(go list ./...)
-    requires:
-      - lint-dockerfile
 
   build-app-karsajobs:
     docker:
@@ -30,5 +28,4 @@ jobs:
       - run:
           name: Build and push app image
           command: ./build_push_image_karsajobs.sh
-    requires:
-      - test-app
+

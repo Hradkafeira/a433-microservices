@@ -3,7 +3,7 @@
 #Build  Dockerfile
 docker build -t hradkafeira/karsajobs:latest  .
 
-#Adjust name with ghcr format
+#create tag with ghcr format
 docker tag hradkafeira/karsajobs:latest ghcr.io/hradkafeira/karsajobs:latest
 
 #Login to github
