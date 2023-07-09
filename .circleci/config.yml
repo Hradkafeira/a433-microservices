@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   lint-dockerfile:
     docker:
-      - image: circleci/base:current
+      - image: circleci/node
     steps:
       - checkout
       - setup_remote_docker
@@ -24,7 +24,7 @@ jobs:
 
   build-app-karsajobs:
     docker:
-      - image: circleci/base:current
+      - image: circleci/node
     steps:
       - checkout
       - setup_remote_docker
