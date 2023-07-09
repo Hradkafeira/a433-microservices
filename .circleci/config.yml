@@ -24,7 +24,7 @@ jobs:
 
   build-app-karsajobs:
     docker:
-      - image: circleci/golang:1.15
+      - image: cimg/base:current
     steps:
       - checkout
       - setup_remote_docker
