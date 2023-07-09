@@ -24,13 +24,13 @@ jobs:
 
   build-app-karsajobs:
     docker:
-      - image: cimg/base:current
+      - image: circleci/golang:1.15
     steps:
       - checkout
       - setup_remote_docker
       - run:
           name: Build and push app image
-          command: sh build_push_image_karsajobs.sh
+          command: sh build_push_images_karsajobs.sh
           
 workflows:
   build-and-test:
