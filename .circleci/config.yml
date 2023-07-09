@@ -3,14 +3,15 @@ version: 2.1
 jobs:
   lint-dockerfile:
     docker:
-      - image: hadolint/hadolint
+      - image: circleci/base:current
     steps:
       - checkout
       - setup_remote_docker
       - run:
           name: Run Dockerfile with hadolint
           command: |
-            hadolint Dockerfile
+            docker pull hadolint/hadolint
+            cat Dockerfile | docker run --rm -i hadolint/hadolint
 
   test-app:
     docker:
@@ -23,7 +24,7 @@ jobs:
 
   build-app-karsajobs:
     docker:
-      - image: circleci/base:latest
+      - image: circleci/base:current
     steps:
       - checkout
       - setup_remote_docker
