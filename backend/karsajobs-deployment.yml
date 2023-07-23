@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-server
+  labels:
+    app: karsajobs                # Label for identifying this deployment as part of the "karsajobs" application.
+    tier: backend                 # Label for categorizing the deployment as the "backend" tier.
+spec:
+  replicas: 1                     # Number of replicas of the backend server to maintain.
+  selector:
+    matchLabels:
+      app: karsajobs                # Selects pods with the label "app: karsajobs" to manage.
+      tier: backend               # Selects pods with the label "tier: backend" to manage.
+  template:
+    metadata:
+      labels:
+        app: karsajobs            # Labels for the pods created from this template.
+        tier: backend
+    spec:
+      containers:
+      - name: karsajobs-backend-server   # Name of the container within the pod.
+        image: ghcr.io/hradkafeira/karsajobs:latest   # Container image to use for this deployment.
+        imagePullPolicy: IfNotPresent   # Specifies when to pull the container image (if it's not already present).
+        ports:
+          - containerPort: 8080    # Specifies the port on which the container listens for incoming traffic.
+        env:
+          - name: APP_PORT         # Environment variable "APP_PORT" with the value "8080".
+            value: "8080"
+          - name: MONGO_HOST       # Environment variable "MONGO_HOST" with the value "karsajobs-mongo".
+            value: "karsajobs-mongo"
+          - name: MONGO_USER       # Environment variable "MONGO_USER" with the value from the secret "mongo-cred" and the key "MONGO_ROOT_USERNAME".
+            valueFrom:
+             secretKeyRef:
+               name: mongo-cred
+               key: MONGO_ROOT_USERNAME
+          - name: MONGO_PASS       # Environment variable "MONGO_PASS" with the value from the secret "mongo-cred" and the key "MONGO_ROOT_PASSWORD".
+            valueFrom:
+             secretKeyRef:
+               name: mongo-cred
+               key: MONGO_ROOT_PASSWORD

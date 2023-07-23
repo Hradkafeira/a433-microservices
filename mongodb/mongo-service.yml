@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: karsajobs-mongo         # Name of the Service, used to reference and identify it within the cluster.
+  labels:
+    app: karsajobs             # Label for identifying this service as part of the "karsajobs" application.
+    tier: backend              # Label for categorizing the service as the "backend" tier.
+spec:
+  ports:
+  - port: 27017                # The port on which the service will be exposed internally within the cluster.
+  selector:
+    app: karsajobs             # Selects pods with the label "app: karsajobs" to include in the service.
+    tier: backend              # Selects pods with the label "tier: backend" to include in the service.
+  clusterIP: None              # The clusterIP is set to "None," which means the service is headless.

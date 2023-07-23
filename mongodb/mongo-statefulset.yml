@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb                     # Name of the StatefulSet, used to reference and identify it within the cluster.
+  labels:
+    app: karsajobs                 # Label for identifying this StatefulSet as part of the "karsajobs" application.
+spec:
+  selector:
+    matchLabels:
+      app: karsajobs               # Selects pods with the label "app: karsajobs" to manage.
+      tier: backend                # Selects pods with the label "tier: backend" to manage.
+  serviceName: karsajobs-mongo     # Name of the service associated with this StatefulSet for network identity.
+  replicas: 1                      # Number of replicas (pods) to maintain for the StatefulSet.
+  minReadySeconds: 10              # The minimum number of seconds for which a newly created pod should be ready before being considered healthy.
+  template:
+    metadata:
+      labels:
+        app: karsajobs             # Labels for the pods created from this template.
+        tier: backend
+    spec:
+      terminationGracePeriodSeconds: 10    # The amount of time for the pod to terminate gracefully upon receiving a termination signal.
+      containers:
+      - image: mongo:latest         # Container image to use for this StatefulSet.
+        name: mongodb               # Name of the container within the pod.
+        ports:
+        - containerPort: 27017      # Specifies the port on which the container listens for incoming traffic.
+          name: mongodb             # Name of the port for the container.
+        volumeMounts:
+        - name: mongo-persistent-storage    # Name of the persistent volume to mount for MongoDB data.
+          mountPath: /data/db        # Mount path in the container for the MongoDB data directory.
+        - name: mongo-config         # Name of the ConfigMap volume to mount for MongoDB configuration.
+          mountPath: /config         # Mount path in the container for the MongoDB configuration directory.
+          readOnly: true             # Mount the ConfigMap volume as read-only.
+        - name: mongo-cred           # Name of the Secret volume to mount for MongoDB credentials.
+          mountPath: /etc/mongo-credentials   # Mount path in the container for MongoDB credentials directory.
+          readOnly: true             # Mount the Secret volume as read-only.
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME_FILE    # Environment variable for MongoDB root username file path.
+          value: /etc/mongo-credentials/MONGO_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_PASSWORD_FILE    # Environment variable for MongoDB root password file path.
+          value: /etc/mongo-credentials/MONGO_ROOT_PASSWORD
+      volumes:
+      - name: mongo-persistent-storage    # PersistentVolumeClaim to be used for MongoDB data storage.
+        persistentVolumeClaim:
+          claimName: mongo-pvc        # Name of the PersistentVolumeClaim to bind for data storage.
+      - name: mongo-config           # ConfigMap volume to provide MongoDB configuration.
+        configMap:
+          name: mongo-config         # Name of the ConfigMap to be mounted as a volume.
+          items:
+            - key: mongo.conf        # The key in the ConfigMap from which to extract data.
+              path: mongo.conf       # The path in the container where the ConfigMap data should be mounted.
+      - name: mongo-cred             # Secret volume to provide MongoDB credentials.
+        secret:
+          secretName: mongo-cred     # Name of the Secret to be mounted as a volume.

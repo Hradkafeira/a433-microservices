@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-server           # Name of the deployment for the frontend server.
+  labels:
+    app: karsajobs                # Label for identifying this deployment as part of the "karsajobs" application.
+    tier: frontend                # Label for categorizing the deployment as the "frontend" tier.
+spec:
+  replicas: 1                     # Number of replicas of the frontend server to maintain.
+  selector:
+    matchLabels:
+      app: karsajobs              # Selects pods with the label "app: karsajobs" to manage.
+      tier: frontend              # Selects pods with the label "tier: frontend" to manage.
+  template:
+    metadata:
+      labels:
+        app: karsajobs            # Labels for the pods created from this template.
+        tier: frontend
+    spec:
+      containers:
+      - name: karsajobs-frontend-server   # Name of the container within the pod.
+        image: ghcr.io/hradkafeira/karsajobs-ui:latest   # Container image to use for this deployment.
+        ports:
+          - containerPort: 8000    # Specifies the port on which the container listens for incoming traffic.

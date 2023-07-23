@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service          # Name of the service, used to reference and identify it within the cluster.
+  labels:
+    app: karsajobs               # Label for identifying this service as part of the "karsajobs" application.
+    tier: backend                # Label for categorizing the service as the "backend" tier.
+spec:
+  ports:
+  - port: 80                     # The port on which the service will be exposed internally within the cluster.
+    nodePort: 30001              # The nodePort specifies the external port on which the service is accessible from outside the cluster.
+  selector:
+    app: karsajobs               # Selects pods with the label "app: karsajobs" to include in the service.
+    tier: backend                # Selects pods with the label "tier: backend" to include in the service.
+  type: NodePort                 # The type of service being created. In this case, it's a NodePort service.

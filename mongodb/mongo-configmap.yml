@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-config             # Name of the ConfigMap, used to reference and identify it within the cluster.
+data:
+  mongo.conf: |                 # The data section containing key-value pairs for the ConfigMap.
+    storage:                    # Configuration for MongoDB storage settings.
+      dbPath: /data/db          # The path to the MongoDB database files.

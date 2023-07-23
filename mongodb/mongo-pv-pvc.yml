@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongo-pv                 # Name of the PersistentVolume, used to reference and identify it within the cluster.
+  labels:
+    type: local                 # Label for categorizing the PersistentVolume as "local" type.
+spec:
+  storageClassName: manual      # Specifies the storage class name for this PersistentVolume.
+  capacity:
+    storage: 4Gi                # The storage capacity of the PersistentVolume is set to 4Gi (4 gigabytes).
+  accessModes:
+    - ReadWriteOnce             # The access mode specifies that the PersistentVolume can be mounted for read-write access by a single node.
+  hostPath:
+    path: "/mnt/data/mongo"     # The hostPath specifies the local filesystem path on the node where the PersistentVolume data is stored.
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc                # Name of the PersistentVolumeClaim, used to reference and identify it within the cluster.
+spec:
+  storageClassName: manual      # Specifies the storage class name for this PersistentVolumeClaim.
+  accessModes:
+    - ReadWriteOnce             # The access mode specifies that the PersistentVolumeClaim requires read-write access by a single node.
+  resources:
+    requests:
+      storage: 4Gi               # The amount of storage requested by the PersistentVolumeClaim is 4Gi (4 gigabytes).

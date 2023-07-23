@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: karsajobs               # Name of the Namespace, used to reference and identify it within the cluster.
+  labels:
+    app: karsajobs             # Label for identifying this Namespace as part of the "karsajobs" application.
