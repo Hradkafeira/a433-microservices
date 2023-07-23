@@ -30,7 +30,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build and push app image
-          command: sh build_push_images_karsajobs.sh
+          command: sh build_push_image_karsajobs.sh
           
 workflows:
   build-and-test:
