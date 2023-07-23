@@ -7,7 +7,7 @@ metadata:
     tier: backend                # Label for categorizing the service as the "backend" tier.
 spec:
   ports:
-  - port: 80                     # The port on which the service will be exposed internally within the cluster.
+  - port: 8080                     # The port on which the service will be exposed internally within the cluster.
     nodePort: 30001              # The nodePort specifies the external port on which the service is accessible from outside the cluster.
   selector:
     app: karsajobs               # Selects pods with the label "app: karsajobs" to include in the service.
