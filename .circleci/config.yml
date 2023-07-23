@@ -1,0 +1,30 @@
+version: 2.1
+
+jobs:
+  lint-dockerfile:
+    docker:
+      - image: circleci/node
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Run Dockerfile with hadolint
+          command: |
+            docker pull hadolint/hadolint
+            cat Dockerfile | docker run --rm -i hadolint/hadolint
+
+  build-app-karsajobs-ui:
+    docker:
+      - image: circleci/node
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build and push app image
+          command: sh build_push_image_karsajobs_ui.sh
+          
+workflows:
+  build-and-deploy:
+    jobs:
+      - lint-dockerfile
+      - build-app-karsajobs-ui
