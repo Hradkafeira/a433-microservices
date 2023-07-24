@@ -21,4 +21,4 @@ spec:
       - name: karsajobs-frontend-server   # Name of the container within the pod.
         image: ghcr.io/hradkafeira/karsajobs-ui:latest   # Container image to use for this deployment.
         ports:
-          - containerPort: 8081  # Specifies the port on which the container listens for incoming traffic.
+          - containerPort: 8000  # Specifies the port on which the container listens for incoming traffic.

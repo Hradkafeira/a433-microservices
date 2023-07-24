@@ -6,7 +6,7 @@ metadata:
     app: karsajobs                # Label for identifying this service as part of the "karsajobs" application.
 spec:
   ports:
-  - port: 8081                    # The port on which the service will be exposed internally within the cluster.
+  - port: 8000                    # The port on which the service will be exposed internally within the cluster.
     nodePort: 30000               # The nodePort specifies the external port on which the service is accessible from outside the cluster.
   selector:
     app: karsajobs                # Selects pods with the label "app: karsajobs" to include in the service.
