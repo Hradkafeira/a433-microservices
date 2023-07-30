@@ -1,0 +1,62 @@
+# Specify the Docker Compose file version being used.
+version: "3.8"
+
+# Define the services that make up the application.
+services:
+  # RabbitMQ service acting as the message broker.
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    container_name: 'messagebroker_rabbitmq'
+    # Map RabbitMQ ports to the host machine to enable external access.
+    ports:
+        - 5673:5672  # AMQP port mapping
+        - 15673:15672  # RabbitMQ management UI port mapping
+    # Mount volumes to persist RabbitMQ data and logs.
+    volumes:
+        - data_rabbitmq:/var/lib/rabbitmq/  # RabbitMQ data volume
+        - log_rabbitmq:/var/log/rabbitmq  # RabbitMQ log volume
+    # Attach the container to a custom bridge network named 'rabbitmq_network'.
+    networks:
+        - rabbitmq_network
+
+  # Consumer service for the order service.
+  order-service-consumer:
+    image: ghcr.io/hradkafeira/order-service:latest
+    # Specify the dependency on the RabbitMQ service to ensure it starts first.
+    depends_on:
+      - "rabbitmq"
+    environment:
+      PORT: 3000  # Set the port on which the order service listens inside the container.
+      AMQP_URL: amqp://guest:guest@rabbitmq:5672  # AMQP URL to connect to RabbitMQ.
+    ports:
+      - 3000:3000  # Map the container's port to the host's port for external access.
+    command: sh -c '/bin/wait-for-it.sh rabbitmq:5672 --timeout=60 -- node index.js'
+    # Attach the container to the 'rabbitmq_network' to communicate with RabbitMQ.
+    networks: 
+      - rabbitmq_network
+
+  # Consumer service for the shipping service.
+  shipping-service-consumer:
+    image: ghcr.io/hradkafeira/shipping-service:latest
+    # Specify the dependency on the RabbitMQ service to ensure it starts first.
+    depends_on:
+      - "rabbitmq"
+    environment:
+      PORT: 3001  # Set the port on which the shipping service listens inside the container.
+      AMQP_URL: amqp://guest:guest@rabbitmq:5672  # AMQP URL to connect to RabbitMQ.
+    ports:
+      - 3001:3001  # Map the container's port to the host's port for external access.
+    command: sh -c '/bin/wait-for-it.sh rabbitmq:5672 --timeout=60 -- node index.js'
+    # Attach the container to the 'rabbitmq_network' to communicate with RabbitMQ.
+    networks:
+      - rabbitmq_network
+
+# Define named volumes for RabbitMQ data and logs.
+volumes:
+  data_rabbitmq:
+  log_rabbitmq:
+
+# Define a custom bridge network named 'rabbitmq_network'.
+networks:
+  rabbitmq_network:
+    driver: bridge
